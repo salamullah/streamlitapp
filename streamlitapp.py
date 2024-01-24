@@ -36,11 +36,33 @@ def crawl_and_save_data():
         st.success("Weather data crawled and saved to CSV.")
     else:
         st.error(f"Failed to crawl weather data. Status code: {response.status_code}")
+# Read CSV file
+def read_csv_file():
+    try:
+        df = pd.read_csv("weather_data.csv")
+        return df
+    except FileNotFoundError:
+        return None
+
+# Streamlit app to display data
+def display_data():
+    st.title("Weather Data Display App")
+
+    # Read CSV file
+    weather_data = read_csv_file()
+
+    if weather_data is not None:
+        # Display the data table
+        st.write("## Weather Data Table")
+        st.write(weather_data)
+    else:
+        st.warning("Weather data CSV file not found. Run the crawler app to generate data.")
+
 
 # Streamlit app
 def main():
     st.title("Weather Data Crawler App")
-
+    display_data()
     # Schedule crawling task to run every 24 hours
     now = datetime.now()
     schedule_time_1 = datetime(now.year, now.month, now.day, 9, 0)  # 9:00 AM
@@ -67,3 +89,4 @@ def main():
 # Run the Streamlit app
 if __name__ == "__main__":
     main()
+    
