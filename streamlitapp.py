@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 import pandas as pd
 import schedule
-import time
+from datetime import datetime, timedelta
 
 # Function to crawl weather data and save to CSV
 def crawl_and_save_data():
@@ -31,9 +31,14 @@ def main():
     st.title("Weather Data Crawler App")
 
     # Schedule crawling task to run every 24 hours
-    schedule.every().day.at("09:00").do(crawl_and_save_data)
-    schedule.every().day.at("15:00").do(crawl_and_save_data)
-    schedule.every().day.at("21:00").do(crawl_and_save_data)
+    now = datetime.now()
+    schedule_time_1 = datetime(now.year, now.month, now.day, 9, 0)  # 9:00 AM
+    schedule_time_2 = datetime(now.year, now.month, now.day, 15, 0)  # 3:00 PM
+    schedule_time_3 = datetime(now.year, now.month, now.day, 21, 0)  # 9:00 PM
+    
+    schedule.every().day.at(schedule_time_1.strftime('%H:%M')).do(crawl_and_save_data)
+    schedule.every().day.at(schedule_time_2.strftime('%H:%M')).do(crawl_and_save_data)
+    schedule.every().day.at(schedule_time_3.strftime('%H:%M')).do(crawl_and_save_data)
 
     while True:
         # Run pending scheduled tasks
@@ -43,4 +48,3 @@ def main():
 # Run the Streamlit app
 if __name__ == "__main__":
     main()
-
