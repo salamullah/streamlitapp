@@ -54,7 +54,15 @@ def main():
     while True:
         # Run pending scheduled tasks
         schedule.run_pending()
-        time.sleep(1)
+        
+        # Sleep for 1 second
+        now = datetime.now()
+        next_run = schedule.idle_seconds()
+        if next_run > 0:
+            time_to_sleep = min(1, next_run)
+            sleep_until = now + timedelta(seconds=time_to_sleep)
+            while datetime.now() < sleep_until:
+                pass
 
 # Run the Streamlit app
 if __name__ == "__main__":
